@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reveal Sdk - Create New Dashboard</title>
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.7.1/infragistics.reveal.js"></script>
+
+    <select name="customers" id="customerId">
+        <option value="ALFKI">ALFKI</option>
+        <option value="ANATR">ANATR</option>
+        <option value="ANTON">ANTON</option>
+        <option value="AROUT">AROUT</option>
+        <option value="BERGS">BERGS</option>
+        <option value="BLAUS">BLAUS</option>
+        <option value="BLONP">BLONP</option>
+        <option value="BOLID">BOLID</option>
+        <option value="BONAP">BONAP</option>
+        <option value="BOTTM">BOTTM</option>
+        <option value="BSBEV">BSBEV</option>
+        <option value="CACTU">CACTU</option>
+        <option value="CENTC">CENTC</option>
+        <option value="CHOPS">CHOPS</option>
+        <option value="COMMI">COMMI</option>
+        <option value="CONSH">CONSH</option>
+        <option value="DRACD">DRACD</option>
+        <option value="DUMON">DUMON</option>
+        <option value="EASTC">EASTC</option>
+        <option value="ERNSH">ERNSH</option>
+    </select>
+    <p></p>
+
+    <div id="viewer"  style="height: calc(100vh - 20px); width: 100%;"></div>
+
+    <script type="text/javascript">
+        $.ig.RevealSdkSettings.setBaseUrl("http://localhost:5111/");
+
+        $.ig.RevealSdkSettings.setAdditionalHeadersProvider(function (url) {
+            return headers;
+        });
+
+        const headers = {};
+        
+        var revealView = new $.ig.RevealView("#viewer");
+        revealView.interactiveFilteringEnabled = true;
+        revealView.startInEditMode = true;    
+        
+        revealView.onDataSourcesRequested = (callback) => {
+        
+            // Set values to pass to server
+            var selectedCustomerId = $('#customerId').val();
+            headers["x-header-one"] = selectedCustomerId;
+
+            var mySqlServerDataSource = new $.ig.RVSqlServerDataSource();
+            mySqlServerDataSource.id="sqlServer";
+            mySqlServerDataSource.title = "SQL Server Data Source";
+            mySqlServerDataSource.subtitle = "Full Northwind Database";
+
+            var mySqlServerDataSourceItem = new $.ig.RVSqlServerDataSourceItem(mySqlServerDataSource);
+            mySqlServerDataSourceItem.id="customer-orders";
+            mySqlServerDataSourceItem.title = "Customers Orders";
+            mySqlServerDataSourceItem.subtitle = "Custom Query - Customers_Orders View";
+
+            var mySqlServerDataSourceItem1 = new $.ig.RVSqlServerDataSourceItem(mySqlServerDataSource);
+            mySqlServerDataSourceItem1.id="orders-custom-query";
+            mySqlServerDataSourceItem1.title = "Orders by CustomerId";
+            mySqlServerDataSourceItem1.subtitle = "Custom Query passing CustomerId";
+
+            var mySqlServerDataSourceItem2 = new $.ig.RVSqlServerDataSourceItem(mySqlServerDataSource);
+            mySqlServerDataSourceItem2.id="customers-parameterized-proc";
+            mySqlServerDataSourceItem2.title = "Customers Orders Stored Procedure";
+            mySqlServerDataSourceItem2.subtitle = "Parameterized with Customer_Id";
+
+            var mySqlServerDataSourceItem3 = new $.ig.RVSqlServerDataSourceItem(mySqlServerDataSource);
+            mySqlServerDataSourceItem3.id="order-analysis";
+            mySqlServerDataSourceItem3.title = "OrderAnalysis View";
+            mySqlServerDataSourceItem3.subtitle = "View using SetTable in Server Code";
+
+
+            callback(new $.ig.RevealDataSources([mySqlServerDataSource], 
+                [mySqlServerDataSourceItem, mySqlServerDataSourceItem1, mySqlServerDataSourceItem2, 
+                    mySqlServerDataSourceItem3], false));
+
+           };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reveal Sdk - HTML/JavaScript</title>
+  </head>
+
+  <body>
+    <div id="revealView" style="height: calc(100vh - 20px); width: 100%;"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.7.4/infragistics.reveal.js"></script>
+
+    <script type="text/javascript">
+      $.ig.RevealSdkSettings.setBaseUrl("http://localhost:5111/");
+      $.ig.RevealSdkSettings.enableActionsOnHoverTooltip = true;
+
+      var revealView = new $.ig.RevealView("#revealView");
+      revealView.startInEditMode = true;
+
+      revealView.interactiveFilteringEnabled = true;
+      revealView.onDataSourcesRequested = (callback) => {
+       
+        var bigQuery = new $.ig.RVBigQueryDataSource();
+        bigQuery.title = "Big Query";
+        bigQuery.subtitle = "Full Data Set";
+ 
+        var bigQueryItem = new $.ig.RVBigQueryDataSourceItem(bigQuery);
+        bigQueryItem.id = "bigQueryBaseball";
+        bigQueryItem.title = "Baseball Schedules";
+        bigQueryItem.subtitle = "Night Games";
+
+        callback(new $.ig.RevealDataSources([bigQuery], [bigQueryItem], false));};
+    </script>
+  </body>
+</html>
